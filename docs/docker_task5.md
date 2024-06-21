@@ -44,7 +44,7 @@
     <p><font color=green>sudo chmod +x /usr/local/bin/docker-compose</font></p>
     <p><font color=green>docker-compose --version</font> или <font color=green></font>docker-compose version</font></p>
 <p>
-    2. <b>Разработка простой программы:</b> писать какой-то детский скрипт, не хочу.<p><b>Репозиторий:</b><br>Создал репозиторий https://github.com/DmitriyZubkov41/task5.
+    2. <b>Разработка простой программы:</b> писать какой-то детский скрипт, не хочу. Репозиторий на гитхабе, создам в конце задания.
 </p>
 <p>3. <b>Создание образа для программы:</b><br>
 Меня заинтересовал проект Антона Писаренко - <a href="https://github.com/AntonSHBK/mobile_robot_base_ros1">Простая имитационная модель мобильного робота в ROS и Gazebo</a>. 
@@ -56,8 +56,8 @@ dmitriy@945G-M3:~/task5$ mkdir docker<br>
 dmitriy@945G-M3:~/task5$ cd docker<br>
 dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
 <p>
-<img src="dockerfile_start.png">
-<p><img src="https://github.com/DmitriyZubkov41/task5/blob/main/images/dockerfile_end.png"></p>
+<img src="./images/docker_start.png">
+<p><img src="/home/dmitriy/task5/images/docker_end.png"></p>
 </p>
 
 </p>

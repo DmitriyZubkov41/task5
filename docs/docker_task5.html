@@ -1,4 +1,5 @@
 <html><head></head><body>
+<title>Docs/Отчёт по заданию №5.7</title>
     <h2 align="center">Отчет по практической работе №5.7</h3>
     1. <b>Установка Docker:</b>
     <p>
@@ -37,14 +38,22 @@
     посмотрел последнюю версию (v2.27.1), скопировал и вставил в команду номер версии (красным цветом, что я вставил):
     <p>
     <font color="green">sudo curl -L "https://github.com/docker/compose/releases/download/</font><font color=red>v2.27.1</font><font color=green>/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose</font><p>
-        Более понятный и наверное я так в первый раз установил, способ: 
-    <a href="https://github.com/docker/compose/releases">на странице релизов</a> нажимаем на <a href="https://github.com/docker/compose/tags">Tags</a>.  Далее на нужном релизе нажимаем на Downloads.  Копируем путь и вставляем в команду, между кавычками:<p>
+    Второй и более понятный способ: 
+    <a href="https://github.com/docker/compose/releases">страница релизов</a> &rarr; <a href="https://github.com/docker/compose/tags">Tags</a>.  &rarr;  Downloads.  Копируем путь, вставляем в команду, между кавычками:<p>
         <font color="green">sudo curl -L
-            "https://github.com/docker/compose/releases/download/v2.27.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose</font></p>
+            "</font><font color=red>https://github.com/docker/compose/releases/download/v2.27.2/docker-compose-linux-x86_64</font><font color=green>" -o /usr/local/bin/docker-compose</font></p>
+    Далее:
     <p><font color=green>sudo chmod +x /usr/local/bin/docker-compose</font></p>
     <p><font color=green>docker-compose --version</font> или <font color=green></font>docker-compose version</font></p>
 <p>
-    2. <b>Разработка простой программы:</b> писать какой-то детский скрипт, не хочу.<p><b>Репозиторий:</b><br>Создал репозиторий https://github.com/DmitriyZubkov41/task5.
+    2. <b>Разработка простой программы:</b><p>
+        <font color="green">mkdir scripts</font><br>
+        Создал баш скрипт:<br>
+        <b>#!/bin/bash<br>
+        echo "Скрипт1"</b>
+    </p>
+
+<p><b>Репозиторий:</b><br>Создал репозиторий https://github.com/DmitriyZubkov41/task5.
 </p>
 <p>3. <b>Создание образа для программы:</b><br>
 Меня заинтересовал проект Антона Писаренко - <a href="https://github.com/AntonSHBK/mobile_robot_base_ros1">Простая имитационная модель мобильного робота в ROS и Gazebo</a>. 
@@ -56,13 +65,100 @@ dmitriy@945G-M3:~/task5$ mkdir docker<br>
 dmitriy@945G-M3:~/task5$ cd docker<br>
 dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
 <p>
-<img src="dockerfile_start.png">
-<p><img src="https://github.com/DmitriyZubkov41/task5/blob/main/images/dockerfile_end.png"></p>
+<code><pre><details><summary><b><font size=4>раскрыть код Dockerfile</font></b></summary>
+    # Строим на базе ROS 1 версия noetic-desktop
+    # Эта версия - последняя поддерживаемая в ubuntu 20.04
+    FROM osrf/ros:noetic-desktop
+    
+    # set environment variables
+    ENV PYTHONDONTWRITEBYTECODE 1 # Предотвращает создание .pyc файлов
+    ENV PYTHONUNBUFFERED 1        # Предотвращает буферизацию вывода Python, улучшая логирование
+    
+    #Этот блок вроде предназначен для тех кто имеет в компьютере графический чипсет от NVIDIA
+    # Поэтому думаю можно все закомментировать
+    # nvidia-container-runtime
+    #ENV NVIDIA_VISIBLE_DEVICES \
+    #   ${NVIDIA_VISIBLE_DEVICES:-all}
+    #ENV NVIDIA_DRIVER_CAPABILITIES \
+    #   ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
+    
+    # set work directory
+    #RUN mkdir /workspace/src/mobile_robot_base_ros1 -p
+    WORKDIR /home/dmitriy/task5
+    
+    # Additional commands (installing dependencies)
+    RUN apt-get update && \
+        apt-get install -y \
+        curl \                
+        wget \                
+        python3-pip \         
+        python3-tk            # Пакеты длля tkinter
+    
+    # Gazebo 11
+    RUN sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+    RUN wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+    RUN sudo apt-get install -y libgazebo11-dev 
+    # RUN sudo apt-get install -y ros-noetic-gazebo-ros
+    # RUN sudo apt-get install -y gazebo11
+    
+    # Дополнительные пакеты Gazebo для работы с ROS
+    # RUN curl -sSL http://get.gazebosim.org | sh
+    RUN apt-get update && \
+        apt-get install -y \
+    #     gazebo11 \
+    #     libgazebo11-dev 
+        ros-noetic-gazebo-ros \
+        ros-noetic-gazebo-ros-pkgs \
+        ros-noetic-gazebo-ros-control
+    
+    # Установка дополнительных пакетов ROS для управления и работы с роботами
+    RUN apt-get update && \
+        apt-get install -y \
+        ros-noetic-control-toolbox \
+        ros-noetic-realtime-tools \
+        ros-noetic-ros-controllers \
+        ros-noetic-xacro \
+        python3-wstool \
+        ros-noetic-tf-conversions \
+        ros-noetic-kdl-parser \
+        liburdfdom-tools
+    
+    # Установка инструментов для разработки
+    RUN apt-get update && \
+        apt-get install -y \
+        nano \
+        git \
+        tmux \
+        tree 
+    
+    
+    # Установка зависимостей Python
+    COPY ./requirements.txt /tmp/requirements.txt
+    RUN pip install --upgrade pip
+    RUN pip install -r /tmp/requirements.txt
+    
+    # Настройка bashrc
+    RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+    RUN echo "alias dros='source devel/setup.bash'" >> ~/.bashrc
+    
+    RUN echo "Сделали"
+    </code></pre></div></details>
 </p>
-
+Далее в task5:<br>
+    <font color="green">touch requirements.txt<br>
+        nano requirements.txt
+    </font>
 </p>
-
-
+Собираем образ rosgazebo:<br>
+<font color=green>dmitriy@945G-M3:~/task5$ docker build -t rosgazebo -f docker/Dockerfile .<br>
+    dmitriy@945G-M3:~/task5$ docker images</font>
+</p>
+<p>
+4. Запуск и тестирование программы в Docker-контейнере:<p>
+<font color="green">dmitriy@945G-M3:~/task5/scripts$ docker run -it rosgazebo bash script.sh</font>
+<p>
+    Скрипт выполняется, но контейнер почему-то не открылся.
+</p>
 
 
 

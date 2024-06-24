@@ -1,0 +1,19 @@
+version: '2' #Версия compose 2 с чем-то
+#Хочу выполнить 3 скрипта, каждый в своём контейнере и терминале.
+
+volumes: /home/dmitriy/task5 #для всех трёх контейнеров делаем видимой папку с хоста (монтирование) 
+services:
+#Контейнер №1 
+ 1:
+   image:rosgazebo
+   command: bash ../scripts/script.sh
+#Контейнер №2
+ 2:
+   command: tmux
+   image: rosgazebo
+   command: bash ../scripts/script2.sh
+# Контейнер №3 
+ 3:
+   command: tmux
+   image: rosgazebo
+   bash ../scripts/script3.sh

@@ -1,5 +1,5 @@
 <html><head></head><body>
-<title>Docs/Отчёт по заданию №5.7</title>
+<title>Отчёт по заданию №5.7</title>
     <h2 align="center">Отчет по практической работе №5.7</h3>
     1. <b>Установка Docker:</b>
     <p>
@@ -20,10 +20,10 @@
     <p>
        sudo apt-get update</font>
     <p>Устанавливаю пакеты Docker:<p>
-    <font color="green">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</font>
+    <font color="green">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</font><p>
     Docker Engine установил.
     
-    <p>Чтобы не пользоваться каждый раз при выполнении команды docker через sudo:
+    <p>Чтобы не выполнять каждый раз команду docker через sudo:
     <p>
         <font color="green">sudo groupadd docker</font>
     <p>
@@ -39,7 +39,7 @@
     <p>
     <font color="green">sudo curl -L "https://github.com/docker/compose/releases/download/</font><font color=red>v2.27.1</font><font color=green>/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose</font><p>
     Второй и более понятный способ: 
-    <a href="https://github.com/docker/compose/releases">страница релизов</a> &rarr; <a href="https://github.com/docker/compose/tags">Tags</a>.  &rarr;  Downloads.  Копируем путь, вставляем в команду, между кавычками:<p>
+    <a href="https://github.com/docker/compose/releases">страница релизов</a> &rarr; <a href="https://github.com/docker/compose/tags">Tags</a>  &rarr;  Downloads.  Копируем путь, вставляем в команду, между кавычками:<p>
         <font color="green">sudo curl -L
             "</font><font color=red>https://github.com/docker/compose/releases/download/v2.27.2/docker-compose-linux-x86_64</font><font color=green>" -o /usr/local/bin/docker-compose</font></p>
     Далее:
@@ -47,13 +47,13 @@
     <p><font color=green>docker-compose --version</font> или <font color=green></font>docker-compose version</font></p>
 <p>
     2. <b>Разработка простой программы:</b><p>
-        <font color="green">mkdir scripts</font><br>
-        Создал баш скрипт:<br>
-        <b>#!/bin/bash<br>
-        echo "Скрипт1"</b>
+        <font color="green">mkdir scripts</font><p>
+        Баш скрипт:<p>
+        <font color="green">#!/bin/bash<br>
+        echo "Скрипт1"</font>
     </p>
 
-<p><b>Репозиторий:</b><br>Создал репозиторий https://github.com/DmitriyZubkov41/task5.
+<p><b>Репозиторий:</b><br>Создал репозиторий <a href="https://github.com/DmitriyZubkov41/task5">https://github.com/DmitriyZubkov41/task5</a>.
 </p>
 <p>3. <b>Создание образа для программы:</b><br>
 Меня заинтересовал проект Антона Писаренко - <a href="https://github.com/AntonSHBK/mobile_robot_base_ros1">Простая имитационная модель мобильного робота в ROS и Gazebo</a>. 
@@ -142,7 +142,7 @@ dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
     RUN echo "alias dros='source devel/setup.bash'" >> ~/.bashrc
     
     RUN echo "Сделали"
-    </code></pre></div></details>
+    </details></pre></code>
 </p>
 Далее в task5:<br>
     <font color="green">touch requirements.txt<br>
@@ -155,11 +155,59 @@ dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
 </p>
 <p>
 4. Запуск и тестирование программы в Docker-контейнере:<p>
-<font color="green">dmitriy@945G-M3:~/task5/scripts$ docker run -it rosgazebo bash script.sh</font>
 <p>
-    Скрипт выполняется, но контейнер почему-то не открылся.
+<img src="../images/script.sh.png">
 </p>
+5. Docker Compose
+<code><pre><details><summary><b><font size=4>раскрыть код docker-compose.yml</font></b></summary>
+    version: '2'  # Docker Compose version v2.27.1
 
+    name: task5  # Имя проекта
+    
+    services:  # Definition of services to be run in containers
+      ros-noetic-master:  # Service name
+        build:  # Instructions for building the image
+          context: ../  # Build context, the base directory for building
+          dockerfile: ./docker/Dockerfile  # Path to the Dockerfile relative to the context
+        working_dir: /home/dmitriy/task5  # Working directory inside the container
+        volumes:  # Volumes attached to the container
+          - /home/dmitriy/task5  # Mounting the project folder from the host to the container
+        env_file:  # Environment variables file
+          - ./.env  # Path to the environment variables file
+        tty: true  # Enable TTY mode, allowing the use of an interactive terminal in the container
+</details></pre></code>
+<p>
+    cd docker<br>
+docker-compose build<br>
+docker-compose up
+<p>
+    Результат:
+    <img src="../images/docker-compose1.png">
+<p>
+    Результат не очень интересный, просто создали контейнер и присоединились к нему.
+<p>
+    Теперь моя версия docker-compose2.yml:
+<code><pre><details><summary><b><font size=4>раскрыть код docker-compose2.yml</font></b></summary>
+    version: '2' #Версия compose 2 с чем-то
+    #Хочу выполнить 3 скрипта, каждый в своём контейнере и терминале.
+    
+    volumes: /home/dmitriy/task5 #для всех трёх контейнеров делаем видимой папку с хоста (монтирование) 
+    services:
+    #Контейнер №1 
+     1:
+       image:rosgazebo
+       command: bash ../scripts/script.sh
+    #Контейнер №2
+     2:
+       command: tmux
+       image: rosgazebo
+       command: bash ../scripts/script2.sh
+    # Контейнер №3 
+     3:
+       command: tmux
+       image: rosgazebo
+       bash ../scripts/script3.sh
+</details></pre></code>   
 
 
 </body></html>

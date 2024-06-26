@@ -184,30 +184,29 @@ docker-compose up
     Результат:
     <img src="../images/docker-compose1.png">
 <p>
-    Результат не очень интересный, просто создали контейнер и присоединились к нему.
+    Результат не очень интересный, создали контейнер и присоединились к нему.
 <p>
-    Теперь моя версия docker-compose2.yml:
-<code><pre><details><summary><b><font size=4>раскрыть код docker-compose2.yml</font></b></summary>
-    version: '2' #Версия compose 2 с чем-то
-    #Хочу выполнить 3 скрипта, каждый в своём контейнере и терминале.
-    
-    volumes: /home/dmitriy/task5 #для всех трёх контейнеров делаем видимой папку с хоста (монтирование) 
+    Теперь моя версия docker-compose3.yml:
+<code><pre><details><summary><b><font size=4>раскрыть код docker-compose3.yml</font></b></summary>
+    version: '2'
     services:
-    #Контейнер №1 
-     1:
-       image:rosgazebo
-       command: bash ../scripts/script.sh
-    #Контейнер №2
-     2:
-       command: tmux
-       image: rosgazebo
-       command: bash ../scripts/script2.sh
-    # Контейнер №3 
-     3:
-       command: tmux
-       image: rosgazebo
-       bash ../scripts/script3.sh
-</details></pre></code>   
-
+      Kont1:
+        image: rosgazebo
+        volumes:
+          - $HOME/task5:/home/dmitriy/task5
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t
+        command:  /bin/bash && bash scripts/script.sh
+        #command:  bash ./scripts/script.sh 
+    </details></pre></code>   
+<p>
+    Команда: docker-compose -f docker-compose3.yml up<br>
+<img src="../images/docker-compose3.yml.png"><br>
+Контейнер не запустился.
+<p>
+Команда: docker-compose -f docker-compose3.yml run --rm Kont1<br>
+<img src="../images/docker-compose3_2.png"><br>
+Есть контейнер, но нет выполнения скрипта.
+<p>
 
 </body></html>

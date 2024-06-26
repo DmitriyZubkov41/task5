@@ -1,0 +1,22 @@
+version: '2'
+services:
+  Kont1:
+    image: rosgazebo
+    volumes:
+      - $HOME/task5:/home/dmitriy/task5
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    #entrypoint: ["/bin/sh", "-cx"]
+    #command:  "/bin/bash && bash scripts/script.sh" #только вход в контейнер"
+    #command:  >
+    #         bash -cx "/bin/bash && bash scripts/script.sh" #вход в контейнер и при выходе выполняется скрипт
+    #command:   bash -cx "/bin/bash && bash scripts/script.sh" #вход в контейнер и при выходе выполняется скрипт
+    #command:  bash scripts/script.sh #С entrypoint выполняется только вход в контейнер"
+    #command: >
+    #  echo 'Command 1' &&
+    #  echo 'Command 2' 
+    #command: echo 'Command 2'
+    #command: bash -cx "echo 'Command 2'" #если с entrypoint, то только вход в контейнер, если без, то скрипт выполняется, но контейнера нет
+                            #без entrypoint
+    #command: sh c "bash scripts/script.sh" #скрипт выполняется, но контейнера нет.
+    #command: sh -c "/bin/bash && bash scripts/script.sh" #вход в контейнер и при выходе выполняется скрипт

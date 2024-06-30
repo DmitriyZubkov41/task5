@@ -1,16 +1,23 @@
-version: '2'  # Docker Compose version v2.27.1
-
-name: task5  # Имя проекта
-
-services:  # Definition of services to be run in containers
-  ros-noetic-master:  # Service name
-    build:  # Instructions for building the image
-      context: ../  # Build context, the base directory for building
-      dockerfile: ./docker/Dockerfile  # Path to the Dockerfile relative to the context
-    working_dir: /home/dmitriy/task5  # Working directory inside the container
-    volumes:  # Volumes attached to the container
-      - /home/dmitriy/task5  # Mounting the project folder from the host to the container
-    env_file:  # Environment variables file
-      - ./.env  # Path to the environment variables file
-    tty: true  # Enable TTY mode, allowing the use of an interactive terminal in the container
-
+version: '4'
+services:
+  Kont1:
+    image: rosgazebo
+    volumes:
+      - $HOME/task5:/home/dmitriy/task5
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    #--------------------docker-compose up----------------------------------------------------
+    #command:  "/bin/bash && bash scripts/script.sh" #Сначала Attaching to Kont1-1, потом выполняется скрипт и возврат в командную строку хоста, контейнера нет. Второй раз выполнил эту команду, теперь только "Attaching to Kont1-1"
+    #command:   bash -cx "/bin/bash && bash scripts/script.sh" #Attaching to Kont1-1
+    #command:  "/bin/bash && bash scripts/script.sh && echo wwww" #Attaching to Kont1-1
+    command: sh -c "bash scripts/script.sh" #скрипт выполняется, но контейнера нет.
+    #command: sh -c "bash scripts/script.sh && echo rrrr"
+    #command: sh -c "bash scripts/script.sh && tail -f /dev/null"
+    #command: sh -c "/bin/bash && bash scripts/script.sh && echo ttttt" #Attaching to Kont1-1
+  Kont2:
+    image: rosgazebo
+    volumes:
+      - $HOME/task5:/home/dmitriy/task5
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: sh -c "bash scripts/script2.sh"

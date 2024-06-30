@@ -1,0 +1,16 @@
+version: '4'
+services:
+  Kont1:
+    image: rosgazebo4
+    volumes:
+      - $HOME/task5:/home/dmitriy/task5
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    #command: /bin/bash && bash scripts/script.sh && tail -f /dev/null #бесконечный Attaching to Kont1-1
+    #command: /bin/bash && bash scripts/script.sh #бесконечный Attaching to Kont1-1
+    #command: 
+    #  bash scripts/script.sh
+    #  echo "6666666666666666666"
+    #  tail -f /dev/null
+    #command:  "/bin/bash && bash scripts/script.sh" #бесконечный Attaching to Kont1-1
+    command:   bash -cx "/bin/bash && bash scripts/script.sh" #вход в контейнер и при выходе выполняется скрипт

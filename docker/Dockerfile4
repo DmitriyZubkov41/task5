@@ -73,4 +73,4 @@ RUN pip install -r /tmp/requirements.txt
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 RUN echo "alias dros='source devel/setup.bash'" >> ~/.bashrc
 
-RUN echo "Сделали"
+CMD ["/bin/bash"]

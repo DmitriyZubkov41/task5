@@ -1,0 +1,9 @@
+version: '4'
+services:
+  Kont1:
+    image: rosgazebo4
+    volumes:
+      - $HOME/task5:/home/dmitriy/task5
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: bash scripts/script.sh && tail -f /dev/null#выполняется только скрипт

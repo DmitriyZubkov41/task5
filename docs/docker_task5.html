@@ -65,7 +65,7 @@ dmitriy@945G-M3:~/task5$ mkdir docker<br>
 dmitriy@945G-M3:~/task5$ cd docker<br>
 dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
 <p>
-<code><pre><details><summary><b><font size=4>раскрыть код Dockerfile</font></b></summary>
+<code><pre>
     # Строим на базе ROS 1 версия noetic-desktop
     # Эта версия - последняя поддерживаемая в ubuntu 20.04
     FROM osrf/ros:noetic-desktop
@@ -142,7 +142,7 @@ dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
     RUN echo "alias dros='source devel/setup.bash'" >> ~/.bashrc
     
     RUN echo "Сделали"
-    </details></pre></code>
+    </pre></code>
 </p>
 Далее в task5:<br>
     <font color="green">touch requirements.txt<br>
@@ -207,6 +207,57 @@ docker-compose up
 Команда: docker-compose -f docker-compose3.yml run --rm Kont1<br>
 <img src="../images/docker-compose3_2.png"><br>
 Есть контейнер, но нет выполнения скрипта.
-<p>
 
+<h3 align="center">Dockerfile3</h3>
+Создал Dockerfile3, в него относительно Dockerfile добавил инструкцию: <b>ENTRYPOINT [ "/bin/bash", "-l", "-c" ]</b><br>
+dmitriy@945G-M3:~/task5$ <font color=green>docker build -t rosgazebo3 -f docker/Dockerfile3 .</font>
+<p>
+dmitriy@945G-M3:~/task5$ <font color=green>docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo3</font>
+<p>
+<img src="../images/dockerfile3.png">
+
+<h3 align="center">Dockerfile4</h3>
+В Dockerfile4 в конце добавил строку: <b>CMD ["/bin/bash"]</b>
+<p>
+dmitriy@945G-M3:~/task5$ <font color=green>docker build -t rosgazebo4 -f docker/Dockerfile4 .</font>
+<p>
+dmitriy@945G-M3:~/task5$ <font color=green>docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo4</font>
+<br><b>root@91097aa5cff1:/home/dmitriy/task5#</b>
+<p>
+dmitriy@945G-M3:~/task5$ <font color=green>docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo4 bash scripts/script.sh</font>
+<p>
+    <img src="../images/dockerfile4.png">
+
+<h4 align="center">Запуск скриптов через команду: <b>docker-compase up</b></h4>
+
+<ol>
+<li><b>Образ rosgazebo4 на dockerfile4 с CMD ["/bin/bash"]</b><br>
+    команда: <font color=green>docker-compose -f docker-compose5.yml up</font>
+    <ol>
+        <li>command:  "/bin/bash && bash scripts/script.sh" приводит к Attaching to Kont1-1
+        <li>command:   bash -cx "/bin/bash && bash scripts/script.sh"   #Attaching to Kont1-1
+    </ol>
+<li><b>Образ rosgazebo на dockerfile без CMD:</b><br>
+    команда: <font color=green>docker-compose up</font>
+    <ol>
+        <li>command:  "/bin/bash && bash scripts/script.sh"<br>
+        Attaching to Kont1-1, потом: Kont1-1  | Скрипт1, потом: Kont1-1 exited with code 0 и возврат в командную строку хоста. Контейнера не было. <img src="../images/dockercomposeup.png">
+        <p>
+            <font color=red>Странно, через некоторое время всё то же самое, но только результат: Attaching to Kont1-1</font>
+        <li>command:   bash -cx "/bin/bash && bash scripts/script.sh"<br>
+            <img src="../images/dockercomposeup2.png">
+        <li>command:  "/bin/bash && bash scripts/script.sh && echo wwww"<br>
+            <img src="../images/dockercomposeup3.png">
+        <li>command: sh -c "bash scripts/script.sh"<br>
+            <img src="../images/dockercomposeup4.png">
+        <li>command: sh -c "bash scripts/script.sh && echo rrrr"<br>
+            <img src="../images/dockercomposeup5.png">
+        <li>command: sh -c "bash scripts/script.sh && tail -f /dev/null"<br>
+            <img src="../images/dockercomposeup6.png">
+        <li>command: sh -c "/bin/bash && bash scripts/script.sh && echo ttttt"<br>
+            <img src="../images/dockercomposeup7.png">   
+    </ol>
+</ol>
+<h4 align="center">Команда: <font color=green>docker-compase run name_kont</font> или <font color=green>docker compase run name_kont</font></h4>
+<img src="../images/dockercomposerun.png">
 </body></html>

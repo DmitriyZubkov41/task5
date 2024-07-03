@@ -1,94 +1,93 @@
 # Отчёт по заданию №5.7
-    1. **Установка Docker Engine и Docker Compose:**
-    
-    [Официальная страница установки Docker Engine](https://docs.docker.com/engine/install/ubuntu/)
-    
-    Есть несколько способов установки Engine, ниже приведен способ установки с помощью репозитория докера, скорее всего взятый с pdf-файла, прилагаемый к видеоуроку Романа.
-    
-    <font color="green">sudo apt-get update</font>
-    
-        Устанавливаем программы, ключ. На официальной странице приложение gnupg не устанавливается.
-    
-    <font color="green">sudo apt-get install ca-certificates curl</font> <font color=red>gnupg</font>
-    
-    <font color="green">sudo install -m 0755 -d /etc/apt/keyrings
-    
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    
-    sudo chmod a+r /etc/apt/keyrings/docker.asc</font>
-    
-    <font color="green">echo \<br>
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \<br>
-        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \<br>
-        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    
-    sudo apt-get update</font>
 
-    Устанавливаю пакеты Docker:
+1. **Установка Docker Engine и Docker Compose:**
+    
+[Официальная страница установки Docker Engine](https://docs.docker.com/engine/install/ubuntu/)
+    
+Есть несколько способов установки Engine, ниже приведен способ установки с помощью репозитория докера, скорее всего взятый с pdf-файла, прилагаемый к видеоуроку Романа:
+    
+ **sudo apt-get update**
+ 
+ Устанавливаем программы, ключ. На официальной странице приложение gnupg не устанавливается.
+ 
+ **sudo apt-get install ca-certificates curl gnupg**
+    
+**sudo install -m 0755 -d /etc/apt/keyrings**
+    
+**sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc**
+    
+**sudo chmod a+r /etc/apt/keyrings/docker.asc**
+    
+```
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+ ```
+    
+**sudo apt-get update**
 
-    <font color="green">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</font>
+Устанавливаю пакеты Docker:
 
-    Docker Engine установил.
-    
-    Чтобы не выполнять каждый раз команду docker через sudo:
-    
-    <font color="green">sudo groupadd docker</font>
-    
-    <font color="green">sudo usermod -aG docker $USER</font>
-    
-    <font color="green">newgrp docker</font>
-    
-    
-    **Установка Docker Compose:**
-    
-    Compose, я устанавливал два раза. В последний раз, как устанавливал: [на этой странице](https://github.com/docker/compose/releases) посмотрел последнюю версию (v2.27.1), скопировал и вставил в команду номер версии (красным цветом, что я вставил):
-    
-    <font color="green">sudo curl -L "https://github.com/docker/compose/releases/download/</font><font color=red>v2.27.1</font><font color=green>/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose</font>
+**sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin**
 
-    Второй и более понятный способ: 
-    [страница релизов](https://github.com/docker/compose/releases) &rarr; [Tags](https://github.com/docker/compose/tags)  &rarr;  Downloads.  Копируем путь, вставляем в команду, между кавычками:
+Docker Engine установил.<br>
+Чтобы не выполнять каждый раз команду docker через sudo:
     
-    <font color="green">sudo curl -L
-            "</font><font color=red>https://github.com/docker/compose/releases/download/v2.27.2/docker-compose-linux-x86_64</font><font color=green>" -o /usr/local/bin/docker-compose</font></p>
-    <p>Третий способ из [официальной страницы](https://docs.docker.com/compose/install/linux/#install-using-the-repository), самый простой:
+**sudo groupadd docker**<br>
+**sudo usermod -aG docker $USER**<br>
+**newgrp docker**
     
-    <font color=green>sudo apt-get update
-    
-    sudo apt-get install docker-compose-plugin</font>
-    
-    Далее:
-    
-    <font color=green>sudo chmod +x /usr/local/bin/docker-compose</font>
 
-    <img src="../images/version.png">
+**Установка Docker Compose:**
     
-    <font color=red>Docker CLI, как я понимаю, почти не отличается от обычного терминала, поэтому его не обязательно устанавливать.</font>
-
-    2. **Разработка простой программы:**
-
-    task5 - корневой каталог для этого задания. Внутри task5 создал каталог scripts для всех скриптов.
+Compose, я устанавливал два раза. В последний раз, как устанавливал: [на этой странице](https://github.com/docker/compose/releases) посмотрел последнюю версию (v2.27.1), скопировал и вставил в команду номер версии:
     
-    <font color="green">mkdir scripts</font>
+**sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose**
 
-    Баш скрипт:
+Второй и более понятный способ: [страница релизов](https://github.com/docker/compose/releases) &rarr; [Tags](https://github.com/docker/compose/tags)  &rarr;  Downloads.  Копируем путь, вставляем в команду, между кавычками:
+    
+**sudo curl -L
+            "https://github.com/docker/compose/releases/download/v2.27.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose**
+            
+Третий способ из [официальной страницы](https://docs.docker.com/compose/install/linux/#install-using-the-repository), самый простой:
+    
+**sudo apt-get update**
+    
+**sudo apt-get install docker-compose-plugin**
+    
+Далее:
+    
+**sudo chmod +x /usr/local/bin/docker-compose**
 
-    <font color="green">#!/bin/bash<br>
-    echo "Скрипт1"</font>
+![](https://github.com/DmitriyZubkov41/task5/blob/main/images/version.png)
+    
+Docker CLI, как я понимаю, почти не отличается от обычного терминала, поэтому его не обязательно устанавливать.
 
-    На мой взгляд можно было бы потратить 1-2 урока на python или просто pdf-инструкцию, чтобы писать простейшие скрипты. Зато на Git зачем-то потратили целый модуль, хотя помоему к программированию никакого отношения не имеет. Да и Docker, я так и не понял зачем он нужен.
+2. **Разработка простой программы:**
+
+task5 - корневой каталог для этого задания. Внутри task5 создал каталог scripts для всех скриптов.
+    
+**mkdir scripts**
+
+Баш скрипт:<br>
+**#!/bin/bash<br>
+echo "Скрипт1"**
+
+На мой взгляд можно было бы потратить 1-2 урока на python или просто pdf-инструкцию, чтобы писать простейшие скрипты. Зато на Git зачем-то потратили целый модуль, хотя помоему к программированию никакого отношения не имеет. Да и Docker, я так и не понял зачем он нужен.
 
 **Репозиторий:**
 <br>Создал репозиторий [https://github.com/DmitriyZubkov41/task5](https://github.com/DmitriyZubkov41/task5).
 
 3. **Создание образа для программы:**
-<br>
+
 Меня заинтересовал проект Антона Писаренко - [Простая имитационная модель мобильного робота в ROS и Gazebo](https://github.com/AntonSHBK/mobile_robot_base_ros1). Dockerfile на 99% состоит из его dockerfile.
 
 Внутри каталога task5 создаём еще один каталог docker для всех докер-файлов.
 
 [Код Dockerfile:](https://github.com/DmitriyZubkov41/task5/blob/main/docker/Dockerfile)
 
-<code><pre>
+<pre>
     # Строим на базе образа ROS 1 версия noetic-desktop
     # Эта версия - последняя поддерживаемая в ubuntu 20.04
     FROM osrf/ros:noetic-desktop
@@ -165,44 +164,46 @@
     RUN echo "alias dros='source devel/setup.bash'" >> ~/.bashrc
     
     RUN echo "Сделали"
-    </pre></code>
+    </pre>
 
 Берём образ ROS1 из docker hub, устанавливаем Gazebo 11 согласно официальному мануалу. Непонятно откуда взялся список дополнительных пакетов ros. Помучился с указанием пути к requirements.txt в инструкции COPY. Странно.<br>
-С инструкцией WORKDIR, думал имеет какое-то отношение к файловой системе хоста, сейчас бы написал **task5**.<br> 
+С инструкцией WORKDIR, думал имеет какое-то отношение к файловой системе хоста, сейчас бы написал **task5**. 
+
 Далее в task5:<br>
-    <font color="green">touch requirements.txt<br>
-        nano requirements.txt
-    </font>
+**touch requirements.txt**<br>
+**nano requirements.txt**
 
 Собираем образ rosgazebo:<br>
-<font color=green>dmitriy@945G-M3:~/task5$ docker build -t rosgazebo -f docker/Dockerfile .</font><br>
+**dmitriy@945G-M3:~/task5$ docker build -t rosgazebo -f docker/Dockerfile .**<br>
 Непонятно для чего точка стоит в конце, ведь указал путь к dockerfile, но без этой точки команда не работает.
 
-4. Запуск и тестирование программы в Docker-контейнере:
+4. **Запуск и тестирование программы в Docker-контейнере:**
 
-<img src="../images/script.sh.png">
+![](https://github.com/DmitriyZubkov41/task5/blob/main/images/script.sh.png)
 
-5. Docker Compose
+5. **Docker Compose**
 
 Создал docker-compose.yml на основе docker-compose.yml Антона, запустил его, ничего интересного. Решил свой написать. Поскольку compose - многоконтейнерное приложение, то решил запустить 3 контейнера, каждый в своём окне через tmux и чтобы на каждом выполнился автоматом скрипт и сохранилась командная строка контейнера. Такие были мои хотелки.<br>
 Если попробовать выполнить мои желания в одном контейнере командой docker run:
 
-1. <font color="green">docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo /bin/bash && bash scripts/script.sh</font>
+1. **docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo /bin/bash && bash scripts/script.sh**
 
-<img src="../images/dockerrun1.png">
+![](https://github.com/DmitriyZubkov41/task5/blob/main/images/dockerrun1.png)
 <br>Тут в результате (контейнер и при выходе - выполнение скрипта) мне всё непонятно. Если считать, что как только команда выполнилась, то контейнер умирает, то результат на мой взгляд должен быть таким: только и сразу выполнение скрипта.
 
-2. <font color="green">docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo bash scripts/script.sh && /bin/bash</font>
+2. **docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo bash scripts/script.sh && /bin/bash**
 
-<img src="../images/dockerrun2.png"><br>
+![](https://github.com/DmitriyZubkov41/task5/blob/main/images/dockerrun2.png)<br>
 Здесь на мой взгляд должно быть то, что я хочу: выполнение скрипта и по команде /bin/bash сохранение контейнера.
 
-3. <font color="green">docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo /bin/bash && bash scripts/script.sh && /bin/bash</font><p><img src="../images/dockerrun3.png">
+3. **docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo /bin/bash && bash scripts/script.sh && /bin/bash**
+
+![](https://github.com/DmitriyZubkov41/task5/blob/main/images/dockerrun3.png)
 
 Больше недели экспериментировал с командами run compose, файлами и по отдельности выполнять контейнер из docker-compose.yml командой docker run -rm name_konteyner. Но в идеале никак не получается.
 
-**Итоговый код docker-compose.yml:**<br>
-<code><pre>
+**Итоговый код docker-compose.yml:**
+<pre>
     version: '4'
     services:
       Kont1:
@@ -219,10 +220,10 @@
         stdin_open: true # docker run -i
         tty: true        # docker run -t
         command: sh -c "bash scripts/script2.sh"
-</pre></code>
+</pre>
 
-<font color="green">cd docker<br>
-docker-compose build<br>
-docker-compose up</font>
+**cd docker**<br>
+**docker-compose build**<br>
+**docker-compose up**
 
-<img src="../images/dockercomposeup1.png">
+![](https://github.com/DmitriyZubkov41/task5/blob/main/images/dockercomposeup1.png)

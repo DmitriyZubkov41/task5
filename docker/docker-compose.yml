@@ -6,14 +6,7 @@ services:
       - $HOME/task5:/home/dmitriy/task5
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    #--------------------docker-compose up----------------------------------------------------
-    #command:  "/bin/bash && bash scripts/script.sh" #Сначала Attaching to Kont1-1, потом выполняется скрипт и возврат в командную строку хоста, контейнера нет. Второй раз выполнил эту команду, теперь только "Attaching to Kont1-1"
-    #command:   bash -cx "/bin/bash && bash scripts/script.sh" #Attaching to Kont1-1
-    #command:  "/bin/bash && bash scripts/script.sh && echo wwww" #Attaching to Kont1-1
     command: sh -c "bash scripts/script.sh" #скрипт выполняется, но контейнера нет.
-    #command: sh -c "bash scripts/script.sh && echo rrrr"
-    #command: sh -c "bash scripts/script.sh && tail -f /dev/null"
-    #command: sh -c "/bin/bash && bash scripts/script.sh && echo ttttt" #Attaching to Kont1-1
   Kont2:
     image: rosgazebo
     volumes:

@@ -1,11 +1,17 @@
 <html><head></head><body>
 <title>Отчёт по заданию №5.7</title>
     <h2 align="center">Отчет по практической работе №5.7</h3>
-    1. <b>Установка Docker:</b>
+    1. <b>Установка Docker Engine и Docker Compose:</b>
+    <p>
+    <a href="https://docs.docker.com/engine/install/ubuntu/">Официальная страница установки Docker Engine</a>
+    <p>
+    Есть несколько способов установки Engine, ниже приведен способ установки с помощью репозитория докера, скорее всего взятый с pdf-файла, прилагаемый к видеоуроку Романа.
     <p>
     <font color="green">sudo apt-get update</font>
     <p>
-       <font color="green">sudo apt-get install ca-certificates curl gnupg</font>
+        Устанавливаем программы, ключ. На официальной странице приложение gnupg не устанавливается.
+    <p>
+       <font color="green">sudo apt-get install ca-certificates curl</font> <font color=red>gnupg</font>
     <p>
     <font color="green">sudo install -m 0755 -d /etc/apt/keyrings
     <p>
@@ -34,7 +40,7 @@
     
     <p><b>Установка Docker Compose:</b>
     <p>
-    В последний раз, как устанавливал: <a href="https://github.com/docker/compose/releases">на этой странице</a>
+    Compose, я устанавливал два раза. В последний раз, как устанавливал: <a href="https://github.com/docker/compose/releases">на этой странице</a>
     посмотрел последнюю версию (v2.27.1), скопировал и вставил в команду номер версии (красным цветом, что я вставил):
     <p>
     <font color="green">sudo curl -L "https://github.com/docker/compose/releases/download/</font><font color=red>v2.27.1</font><font color=green>/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose</font><p>
@@ -42,31 +48,38 @@
     <a href="https://github.com/docker/compose/releases">страница релизов</a> &rarr; <a href="https://github.com/docker/compose/tags">Tags</a>  &rarr;  Downloads.  Копируем путь, вставляем в команду, между кавычками:<p>
         <font color="green">sudo curl -L
             "</font><font color=red>https://github.com/docker/compose/releases/download/v2.27.2/docker-compose-linux-x86_64</font><font color=green>" -o /usr/local/bin/docker-compose</font></p>
+    <p>Третий способ из <a href="https://docs.docker.com/compose/install/linux/#install-using-the-repository">официальной страницы</a>, самый простой:
+    <p>
+        <font color=green>sudo apt-get update<p>
+        sudo apt-get install docker-compose-plugin</font>
+    <p>
     Далее:
     <p><font color=green>sudo chmod +x /usr/local/bin/docker-compose</font></p>
-    <p><font color=green>docker-compose --version</font> или <font color=green></font>docker-compose version</font></p>
-<p>
+    <img src="../images/version.png">
+    <p><font color=red>Docker CLI, как я понимаю, почти не отличается от обычного терминала, поэтому его не обязательно устанавливать.</font>
+
+    <p>
     2. <b>Разработка простой программы:</b><p>
+    task5 - корневой каталог для этого задания. Внутри task5 создал каталог scripts для всех скриптов.
+    <p>
         <font color="green">mkdir scripts</font><p>
         Баш скрипт:<p>
         <font color="green">#!/bin/bash<br>
         echo "Скрипт1"</font>
     </p>
+    На мой взгляд можно было бы потратить 1-2 урока на python или просто pdf-инструкцию, чтобы писать простейшие скрипты. Зато на Git зачем-то потратили целый модуль, хотя помоему к программированию никакого отношения не имеет. Да и Docker, я так и не понял зачем он нужен.
 
 <p><b>Репозиторий:</b><br>Создал репозиторий <a href="https://github.com/DmitriyZubkov41/task5">https://github.com/DmitriyZubkov41/task5</a>.
 </p>
 <p>3. <b>Создание образа для программы:</b><br>
-Меня заинтересовал проект Антона Писаренко - <a href="https://github.com/AntonSHBK/mobile_robot_base_ros1">Простая имитационная модель мобильного робота в ROS и Gazebo</a>. 
+Меня заинтересовал проект Антона Писаренко - <a href="https://github.com/AntonSHBK/mobile_robot_base_ros1">Простая имитационная модель мобильного робота в ROS и Gazebo</a>. Dockerfile на 99% состоит из его dockerfile.
 </p>
 <p>
-    <font color=green>dmitriy@945G-M3:~$ mkdir task5<br>
-dmitriy@945G-M3:~$ cd task5<br>
-dmitriy@945G-M3:~/task5$ mkdir docker<br>
-dmitriy@945G-M3:~/task5$ cd docker<br>
-dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
+Внутри каталога task5 создаём еще один каталог docker для всех докер-файлов.
 <p>
+    <a href="https://github.com/DmitriyZubkov41/task5/blob/main/docker/Dockerfile">Код Dockerfile:</a><p>
 <code><pre>
-    # Строим на базе ROS 1 версия noetic-desktop
+    # Строим на базе образа ROS 1 версия noetic-desktop
     # Эта версия - последняя поддерживаемая в ubuntu 20.04
     FROM osrf/ros:noetic-desktop
     
@@ -144,14 +157,16 @@ dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
     RUN echo "Сделали"
     </pre></code>
 </p>
+Берём образ ROS1 из docker hub, устанавливаем Gazebo 11 согласно официальному мануалу. Непонятно откуда взялся список дополнительных пакетов ros. Помучился с указанием пути к requirements.txt в инструкции COPY. Странно.<br>
+С инструкцией WORKDIR, думал имеет какое-то отношение к файловой системе хоста, сейчас бы написал <b>task5</b>.<br> 
 Далее в task5:<br>
     <font color="green">touch requirements.txt<br>
         nano requirements.txt
     </font>
 </p>
 Собираем образ rosgazebo:<br>
-<font color=green>dmitriy@945G-M3:~/task5$ docker build -t rosgazebo -f docker/Dockerfile .<br>
-    dmitriy@945G-M3:~/task5$ docker images</font>
+<font color=green>dmitriy@945G-M3:~/task5$ docker build -t rosgazebo -f docker/Dockerfile .</font><br>
+Непонятно для чего точка стоит в конце, ведь указал путь к dockerfile, но без этой точки команда не работает.
 </p>
 <p>
 4. Запуск и тестирование программы в Docker-контейнере:<p>
@@ -159,36 +174,24 @@ dmitriy@945G-M3:~/task5/docker$ nano Dockerfile</font>
 <img src="../images/script.sh.png">
 </p>
 5. Docker Compose
-<code><pre><details><summary><b><font size=4>раскрыть код docker-compose.yml</font></b></summary>
-    version: '2'  # Docker Compose version v2.27.1
+<p>
+Создал docker-compose.yml на основе docker-compose.yml Антона, запустил его, ничего интересного. Решил свой написать. Поскольку compose - многоконтейнерное приложение, то решил запустить 3 контейнера, каждый в своём окне через tmux и чтобы на каждом выполнился автоматом скрипт и сохранилась командная строка контейнера. Такие были мои хотелки.<br>
+Если попробовать выполнить мои желания в одном контейнере командой docker run:
+<ol>
+<li><font color="green">docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo /bin/bash && bash scripts/script.sh</font><p>
+<img src="../images/dockerrun1.png">
+<br>Тут в результате (контейнер и при выходе - выполнение скрипта) мне всё непонятно. Если считать, что как только команда выполнилась, то контейнер умирает, то результат на мой взгляд должен быть таким: только и сразу выполнение скрипта.
 
-    name: task5  # Имя проекта
-    
-    services:  # Definition of services to be run in containers
-      ros-noetic-master:  # Service name
-        build:  # Instructions for building the image
-          context: ../  # Build context, the base directory for building
-          dockerfile: ./docker/Dockerfile  # Path to the Dockerfile relative to the context
-        working_dir: /home/dmitriy/task5  # Working directory inside the container
-        volumes:  # Volumes attached to the container
-          - /home/dmitriy/task5  # Mounting the project folder from the host to the container
-        env_file:  # Environment variables file
-          - ./.env  # Path to the environment variables file
-        tty: true  # Enable TTY mode, allowing the use of an interactive terminal in the container
-</details></pre></code>
+<li><font color="green">docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo bash scripts/script.sh && /bin/bash</font><p><img src="../images/dockerrun2.png"><br>
+Здесь на мой взгляд должно быть то, что я хочу: выполнение скрипта и по команде /bin/bash сохранение контейнера.
+
+<li><font color="green">docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo /bin/bash && bash scripts/script.sh && /bin/bash</font><p><img src="../images/dockerrun3.png">
+</ol>
 <p>
-    cd docker<br>
-docker-compose build<br>
-docker-compose up
-<p>
-    Результат:
-    <img src="../images/docker-compose1.png">
-<p>
-    Результат не очень интересный, создали контейнер и присоединились к нему.
-<p>
-    Теперь моя версия docker-compose3.yml:
-<code><pre><details><summary><b><font size=4>раскрыть код docker-compose3.yml</font></b></summary>
-    version: '2'
+    Больше недели экспериментировал с командами run compose, файлами и по отдельности выполнять контейнер из docker-compose.yml командой docker run -rm name_konteyner. Но в идеале никак не получается.
+<p><b>Итоговый код docker-compose.yml:</b><br>
+<code><pre>
+    version: '4'
     services:
       Kont1:
         image: rosgazebo
@@ -196,68 +199,20 @@ docker-compose up
           - $HOME/task5:/home/dmitriy/task5
         stdin_open: true # docker run -i
         tty: true        # docker run -t
-        command:  /bin/bash && bash scripts/script.sh
-        #command:  bash ./scripts/script.sh 
-    </details></pre></code>   
+        command: sh -c "bash scripts/script.sh" #скрипт выполняется, но контейнера нет.
+      Kont2:
+        image: rosgazebo
+        volumes:
+          - $HOME/task5:/home/dmitriy/task5
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t
+        command: sh -c "bash scripts/script2.sh"
+</pre></code>
 <p>
-    Команда: docker-compose -f docker-compose3.yml up<br>
-<img src="../images/docker-compose3.yml.png"><br>
-Контейнер не запустился.
+<font color="green">cd docker<br>
+docker-compose build<br>
+docker-compose up</font>
 <p>
-Команда: docker-compose -f docker-compose3.yml run --rm Kont1<br>
-<img src="../images/docker-compose3_2.png"><br>
-Есть контейнер, но нет выполнения скрипта.
+    <img src="../images/dockercomposeup1.png">
 
-<h3 align="center">Dockerfile3</h3>
-Создал Dockerfile3, в него относительно Dockerfile добавил инструкцию: <b>ENTRYPOINT [ "/bin/bash", "-l", "-c" ]</b><br>
-dmitriy@945G-M3:~/task5$ <font color=green>docker build -t rosgazebo3 -f docker/Dockerfile3 .</font>
-<p>
-dmitriy@945G-M3:~/task5$ <font color=green>docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo3</font>
-<p>
-<img src="../images/dockerfile3.png">
-
-<h3 align="center">Dockerfile4</h3>
-В Dockerfile4 в конце добавил строку: <b>CMD ["/bin/bash"]</b>
-<p>
-dmitriy@945G-M3:~/task5$ <font color=green>docker build -t rosgazebo4 -f docker/Dockerfile4 .</font>
-<p>
-dmitriy@945G-M3:~/task5$ <font color=green>docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo4</font>
-<br><b>root@91097aa5cff1:/home/dmitriy/task5#</b>
-<p>
-dmitriy@945G-M3:~/task5$ <font color=green>docker run -v $HOME/task5:/home/dmitriy/task5 -it rosgazebo4 bash scripts/script.sh</font>
-<p>
-    <img src="../images/dockerfile4.png">
-
-<h4 align="center">Запуск скриптов через команду: <b>docker-compase up</b></h4>
-
-<ol>
-<li><b>Образ rosgazebo4 на dockerfile4 с CMD ["/bin/bash"]</b><br>
-    команда: <font color=green>docker-compose -f docker-compose5.yml up</font>
-    <ol>
-        <li>command:  "/bin/bash && bash scripts/script.sh" приводит к Attaching to Kont1-1
-        <li>command:   bash -cx "/bin/bash && bash scripts/script.sh"   #Attaching to Kont1-1
-    </ol>
-<li><b>Образ rosgazebo на dockerfile без CMD:</b><br>
-    команда: <font color=green>docker-compose up</font>
-    <ol>
-        <li>command:  "/bin/bash && bash scripts/script.sh"<br>
-        Attaching to Kont1-1, потом: Kont1-1  | Скрипт1, потом: Kont1-1 exited with code 0 и возврат в командную строку хоста. Контейнера не было. <img src="../images/dockercomposeup.png">
-        <p>
-            <font color=red>Странно, через некоторое время всё то же самое, но только результат: Attaching to Kont1-1</font>
-        <li>command:   bash -cx "/bin/bash && bash scripts/script.sh"<br>
-            <img src="../images/dockercomposeup2.png">
-        <li>command:  "/bin/bash && bash scripts/script.sh && echo wwww"<br>
-            <img src="../images/dockercomposeup3.png">
-        <li>command: sh -c "bash scripts/script.sh"<br>
-            <img src="../images/dockercomposeup4.png">
-        <li>command: sh -c "bash scripts/script.sh && echo rrrr"<br>
-            <img src="../images/dockercomposeup5.png">
-        <li>command: sh -c "bash scripts/script.sh && tail -f /dev/null"<br>
-            <img src="../images/dockercomposeup6.png">
-        <li>command: sh -c "/bin/bash && bash scripts/script.sh && echo ttttt"<br>
-            <img src="../images/dockercomposeup7.png">   
-    </ol>
-</ol>
-<h4 align="center">Команда: <font color=green>docker-compase run name_kont</font> или <font color=green>docker compase run name_kont</font></h4>
-<img src="../images/dockercomposerun.png">
 </body></html>

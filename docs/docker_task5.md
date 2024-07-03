@@ -1,5 +1,4 @@
 # Отчёт по заданию №5.7
-    <h2 align="center">Отчет по практической работе №5.7</h3>
     1. <b>Установка Docker Engine и Docker Compose:</b>
     <p>
     <a href="https://docs.docker.com/engine/install/ubuntu/">Официальная страница установки Docker Engine</a>

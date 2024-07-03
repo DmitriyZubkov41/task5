@@ -1,65 +1,62 @@
 # Отчёт по заданию №5.7
 
-    1. **Установка Docker Engine и Docker Compose:**
+1. **Установка Docker Engine и Docker Compose:**
     
-    [Официальная страница установки Docker Engine](https://docs.docker.com/engine/install/ubuntu/)
+[Официальная страница установки Docker Engine](https://docs.docker.com/engine/install/ubuntu/)
     
-    Есть несколько способов установки Engine, ниже приведен способ установки с помощью репозитория докера, скорее всего взятый с pdf-файла, прилагаемый к видеоуроку Романа.
+Есть несколько способов установки Engine, ниже приведен способ установки с помощью репозитория докера, скорее всего взятый с pdf-файла, прилагаемый к видеоуроку Романа:
     
-    <font color="green">sudo apt-get update</font>
+ **sudo apt-get update**
+ 
+ Устанавливаем программы, ключ. На официальной странице приложение gnupg не устанавливается.
+ 
+ **sudo apt-get install ca-certificates curl gnupg**
     
-        Устанавливаем программы, ключ. На официальной странице приложение gnupg не устанавливается.
+**sudo install -m 0755 -d /etc/apt/keyrings**
     
-    <font color="green">sudo apt-get install ca-certificates curl</font> <font color=red>gnupg</font>
+**sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc**
     
-    <font color="green">sudo install -m 0755 -d /etc/apt/keyrings
+**sudo chmod a+r /etc/apt/keyrings/docker.asc**
     
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    
-    sudo chmod a+r /etc/apt/keyrings/docker.asc</font>
-    
-    <font color="green">echo \<br>
+**echo \
         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \<br>
         $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \<br>
-        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null**
     
-    sudo apt-get update</font>
+**sudo apt-get update**
 
-    Устанавливаю пакеты Docker:
+Устанавливаю пакеты Docker:
 
-    <font color="green">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</font>
+**sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin**
 
-    Docker Engine установил.
+Docker Engine установил.<br>
+Чтобы не выполнять каждый раз команду docker через sudo:
     
-    Чтобы не выполнять каждый раз команду docker через sudo:
+**sudo groupadd docker**<br>
+**sudo usermod -aG docker $USER**<br>
+**newgrp docker**
     
-    <font color="green">sudo groupadd docker</font>
-    
-    <font color="green">sudo usermod -aG docker $USER</font>
-    
-    <font color="green">newgrp docker</font>
-    
-    
-    **Установка Docker Compose:**
-    
-    Compose, я устанавливал два раза. В последний раз, как устанавливал: [на этой странице](https://github.com/docker/compose/releases) посмотрел последнюю версию (v2.27.1), скопировал и вставил в команду номер версии (красным цветом, что я вставил):
-    
-    <font color="green">sudo curl -L "https://github.com/docker/compose/releases/download/</font><font color=red>v2.27.1</font><font color=green>/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose</font>
 
-    Второй и более понятный способ: 
-    [страница релизов](https://github.com/docker/compose/releases) &rarr; [Tags](https://github.com/docker/compose/tags)  &rarr;  Downloads.  Копируем путь, вставляем в команду, между кавычками:
+**Установка Docker Compose:**
     
-    <font color="green">sudo curl -L
-            "</font><font color=red>https://github.com/docker/compose/releases/download/v2.27.2/docker-compose-linux-x86_64</font><font color=green>" -o /usr/local/bin/docker-compose</font></p>
-    <p>Третий способ из [официальной страницы](https://docs.docker.com/compose/install/linux/#install-using-the-repository), самый простой:
+Compose, я устанавливал два раза. В последний раз, как устанавливал: [на этой странице](https://github.com/docker/compose/releases) посмотрел последнюю версию (v2.27.1), скопировал и вставил в команду номер версии:
     
-    <font color=green>sudo apt-get update
+**sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose**
+
+Второй и более понятный способ: [страница релизов](https://github.com/docker/compose/releases) &rarr; [Tags](https://github.com/docker/compose/tags)  &rarr;  Downloads.  Копируем путь, вставляем в команду, между кавычками:
     
-    sudo apt-get install docker-compose-plugin</font>
+**sudo curl -L
+            "https://github.com/docker/compose/releases/download/v2.27.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose**
+            
+Третий способ из [официальной страницы](https://docs.docker.com/compose/install/linux/#install-using-the-repository), самый простой:
     
-    Далее:
+**sudo apt-get update**
     
-    <font color=green>sudo chmod +x /usr/local/bin/docker-compose</font>
+**sudo apt-get install docker-compose-plugin**
+    
+Далее:
+    
+**sudo chmod +x /usr/local/bin/docker-compose**
 
     <img src="../images/version.png">
     
